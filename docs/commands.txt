@@ -1,3 +1,5 @@
  - npx @react-native-community/cli@latest init ./ : Initialise a RN project using RN CLI
 
  - npx prettier --write App.tsx : execute prettier on a particular file
+
+ keytool -list -v -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore : Generate SHA-1

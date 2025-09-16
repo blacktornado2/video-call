@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "768995577719",
+    "project_id": "video-call-d22ae",
+    "storage_bucket": "video-call-d22ae.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768995577719:android:505e9eeb9be066ffdd5b72",
+        "android_client_info": {
+          "package_name": "com.client.frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768995577719-cb2lkgl5gvpb42vjsh7viumo6jfvjk49.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.client.frontend",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "768995577719-4gco2r48tajnle8gk3j5s1imt6ee98v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoD2VqKKiKS7vpYHDZlD6ZSiU7W85figc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768995577719-4gco2r48tajnle8gk3j5s1imt6ee98v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

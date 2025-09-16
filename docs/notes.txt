@@ -1,0 +1,66 @@
+ - Project in frontend made using React Native due to the complexity involved in native modules
+ - Authentication: Firebase
+ - UI: Nativewind
+
+Authentication: prefer 'react-native-firebase/auth' over 'firebase/auth'
+ - @react-native-firebase/auth is a wrapper around the native Firebase SDKs for iOS and Android, specifically designed for React Native. 
+ - It offers full native performance, better integration with platform features, and is the recommended way to use Firebase in a React Native environment.
+ - firebase/auth refers to the Firebase Web SDK. While it can sometimes be made to work in React Native, it's not optimized for it, might require polyfills, and won't leverage the native capabilities that @react-native-firebase/auth provides.
+
+https://developers.google.com/android/guides/client-auth
+SHA-1
+Hashing
+Encryption/Cryptography
+Differences b/w above two
+signing certificate
+keytool/generate SHA
+
+
+File Structure for frontend:
+togetherly-app/
+├── android/
+├── ios/
+├── node_modules/
+├── src/
+│   ├── assets/
+│   │   ├── fonts/
+│   │   └── images/
+│   │       └── logo.png
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── AppButton.tsx
+│   │   │   ├── AppTextInput.tsx
+│   │   │   └── Spacer.tsx
+│   │   └── call/
+│   │       ├── CallControls.tsx
+│   │       └── SelfView.tsx
+│   ├── contexts/
+│   │   └── AuthContext.tsx
+│   ├── hooks/
+│   │   └── useAuth.ts
+│   ├── navigation/
+│   │   ├── AppNavigator.tsx
+│   │   ├── AuthStack.tsx
+│   │   ├── MainStack.tsx
+│   │   └── types.ts
+│   ├── screens/
+│   │   ├── auth/
+│   │   │   ├── LoginScreen.tsx
+│   │   │   └── SignupScreen.tsx
+│   │   └── main/
+│   │       ├── CallScreen.tsx
+│   │       └── HomeScreen.tsx
+│   ├── services/
+│   │   ├── firebase.ts
+│   │   └── authService.ts
+│   ├── types/
+│   │   ├── index.ts
+│   │   └── user.ts
+│   └── utils/
+│       ├── colors.ts
+│       └── typography.ts
+├── .eslintrc.js
+├── .prettierrc.js
+├── index.js
+├── tsconfig.json
+└── package.json
