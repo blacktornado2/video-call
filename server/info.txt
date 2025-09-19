@@ -1,0 +1,48 @@
+The High-Level User Flow
+Let's imagine two users, Alice and Bob.
+1. Alice Starts: Alice opens the "Togetherly" app and taps "Start New Call". Your frontend creates a unique Room ID (e.g., room-12345).
+2. Alice Connects: Alice's app connects to your backend WebSocket server and sends a join-room message with her details and room-12345. The server places her in that room.
+3. Alice Invites: Alice shares the Room ID (room-12345) with Bob via a text message, email, etc.
+4. Bob Joins: Bob opens the app, enters room-12345, and taps "Join Call".
+5. Bob Connects: Bob's app connects to the WebSocket server and sends a join-room message with his details and room-12345.
+6. The Introduction: The server now sees two people in room-12345. It sends a user-joined message to Alice, effectively saying, "Bob is here, get ready to connect with him!"
+7. The Handshake (Signaling): Now that Alice knows Bob is present, her app initiates the WebRTC "handshake". She sends technical information (called an "offer") to Bob through your server. The server just relays the message. Bob receives the offer and sends an "answer" back, again relayed by your server. They also exchange network information ("ICE candidates").
+8. Direct Connection: Once the handshake is complete, Alice and Bob's apps have enough information to establish a direct, peer-to-peer connection. Their video and audio streams start flowing directly between their devices.
+9. Leaving: When Alice hangs up, her app sends a leave-room or disconnect message. The server notifies Bob that "Alice has left".
+
+
+
+Backend Components:
+
+Backend Component 1: The Signaling Server
+ - What it is: This is the Node.js/Express/Socket.io application we've been discussing. Its only job is to be a "matchmaker" or "switchboard operator" to introduce users to each other.
+ - Resource Usage: Extremely low. It uses very little CPU and RAM because it only passes small text messages.
+ - Can you run it on your server? Absolutely, yes.
+ - Cost: Free. The software (Node.js, etc.) is open-source. Since you already have the server, your cost here is $0. This is the perfect use case for your remote Linux server.
+
+Backend Component 2: The STUN Server
+ - What it is: A Simple Traversal Underneath NAT server. In simple terms, its job is to help a device on a private Wi-Fi network figure out its public IP address. It answers the question, "How does the internet see me?"
+ - Can you run it on your server? You could (using software like COTURN), but you don't need to.
+ - Cost: Free. There are many high-quality, public STUN servers you can use for free. Google provides several that are used by billions of devices every day. You simply point to them in your frontend code.
+
+Backend Component 3: The TURN Server (The Critical "Gotcha")
+ - What it is: A Traversal Using Relays around NAT server. This is the crucial fallback. About 10-20% of the time, due to complex firewalls or "Symmetric NAT," two users cannot connect directly. A TURN server acts as a middleman or relay, receiving video from User A and forwarding it to User B, and vice-versa.
+ - Can you run it on your server? Technically, yes... but you probably shouldn't.
+ - Cost: This is where the cost comes from.
+
+Why Self-Hosting a TURN Server is Problematic:
+ - Bandwidth Costs: This is the biggest issue. Relaying video and audio streams consumes a massive amount of bandwidth. Your "free" remote Linux server almost certainly has a monthly data transfer limit (e.g., 1TB). A few active video calls could burn through that limit very quickly, resulting in huge overage charges or your provider shutting down your server.
+ - Global Latency: Your server is in one location (e.g., Delhi). If users in New York and London are having a call that needs to be relayed, their video data would have to travel from New York -> Delhi -> London. The lag (latency) would make the call unusable.
+ - Reliability & Scalability: Managing a TURN server that is always online and can handle many simultaneous connections is a full-time job.
+
+The Solution: Use a Managed TURN Service
+This is the professional standard. Companies provide globally distributed TURN servers as a service, and you pay based on usage.
+Examples: Twilio, Metered, Xirsys
+The Best Part: Nearly all of them have a generous free tier that is more than enough for development and your first users. For example, Twilio offers a certain number of GBs of TURN usage for free every month.
+
+Final Recommendation & Roadmap
+Here is the most cost-effective and professional way to set up your backend:
+ - Signaling Server: Host your Node.js/Socket.io application on your free remote Linux server.
+ - STUN Server: Use Google's free public STUN servers in your app's configuration.
+ - TURN Server: Sign up for a free account with a service like Twilio. They will give you credentials (a URL, username, and password) to put in your app's configuration. You will only start paying a small amount if your app becomes popular and exceeds the free monthly bandwidth limit.
+ - This hybrid approach gives you the best of both worlds: you leverage your free server for the easy part (signaling) and rely on a professional, scalable service for the hard, expensive part (video relaying), all while starting for $0.
