@@ -10,56 +10,66 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { authService } from '../services/authService';
+import { authService } from '../services/authService'; // Import the service
 
-// 1. Define the validation schema with Zod
-const loginSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address' }),
-  password: z
-    .string()
-    .min(6, { message: 'Password must be at least 6 characters' }),
-});
+// 1. Define the validation schema with a password confirmation check
+const signupSchema = z
+  .object({
+    email: z.string().email({ message: 'Please enter a valid email address' }),
+    password: z
+      .string()
+      .min(6, { message: 'Password must be at least 6 characters' }),
+    confirmPassword: z.string(),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'], // Set the error on the confirmPassword field
+  });
 
 // Infer the TypeScript type from the schema
-type LoginFormValues = z.infer<typeof loginSchema>;
+type SignupFormValues = z.infer<typeof signupSchema>;
 
-const LoginScreen = () => {
+// Note: You'll need to pass the `navigation` prop from your navigator
+const SignupScreen = ({ navigation }) => {
   // 2. Initialize React Hook Form
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
-  // Handle Email/Password login
-  const onEmailLogin = async (data: LoginFormValues) => {
-    console.log('Attempting email login with:', data);
-    const { user, error } = await authService.signInWithEmail(
+  // 3. Handle Email/Password signup
+  const onEmailSignup = async (data: SignupFormValues) => {
+    console.log('Attempting email signup with:', data);
+    const { user, error } = await authService.signUpWithEmail(
       data.email,
       data.password,
     );
+
     if (error) {
-      Alert.alert('Login Failed', error.message);
+      Alert.alert('Signup Failed', error?.message);
     } else {
-      console.log('Logged in user:', user?.uid);
-      // Navigation will handle moving to the main app
+      console.log('Signed up new user:', user?.uid);
+      // After signup, Firebase automatically logs the user in.
+      // Your navigation logic will detect the authenticated state and switch to the main app.
     }
   };
 
+  // 4. Handle Google Sign-In (same as login)
   const onGoogleLogin = async () => {
-    console.log('Attempting Google login...');
+    console.log('Attempting Google sign-in...');
     const { user, error } = await authService.signInWithGoogle();
     if (error) {
       Alert.alert('Google Sign-In Failed', error.message);
     } else {
-      console.log('Logged in user:', user?.uid);
-      // Navigation will handle moving to the main app
+      console.log('Signed in with Google, user:', user.uid);
     }
   };
 
@@ -67,10 +77,10 @@ const LoginScreen = () => {
     <PaperProvider>
       <View style={styles.container}>
         <PaperText variant="displayMedium" style={styles.title}>
-          Welcome Back
+          Create Account
         </PaperText>
         <PaperText variant="bodyLarge" style={styles.subtitle}>
-          Log in to your Togetherly account
+          Get started with Togetherly
         </PaperText>
 
         {/* Email Input */}
@@ -120,15 +130,38 @@ const LoginScreen = () => {
           <Text style={styles.errorText}>{errors.password.message}</Text>
         )}
 
+        {/* Confirm Password Input */}
+        <Controller
+          control={control}
+          name="confirmPassword"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              label="Confirm Password"
+              mode="outlined"
+              value={value}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              secureTextEntry
+              error={!!errors.confirmPassword}
+              style={styles.input}
+              outlineColor="#E8E6ED"
+              activeOutlineColor="#7868E6"
+            />
+          )}
+        />
+        {errors.confirmPassword && (
+          <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>
+        )}
+
         {/* Submit Button */}
         <Button
           mode="contained"
-          onPress={handleSubmit(onEmailLogin)}
+          onPress={handleSubmit(onEmailSignup)}
           style={styles.button}
           labelStyle={styles.buttonLabel}
           buttonColor="#B2A4FF" // Your primary accent color
         >
-          Log In
+          Sign Up
         </Button>
 
         <Divider style={styles.divider} />
@@ -139,10 +172,21 @@ const LoginScreen = () => {
           onPress={onGoogleLogin}
           style={styles.googleButton}
           labelStyle={styles.googleButtonLabel}
-          icon="google" // React Native Paper has built-in icons
+          icon="google"
         >
-          Sign In with Google
+          Sign Up with Google
         </Button>
+
+        {/* Link to Login Screen */}
+        <TouchableOpacity
+          style={styles.loginLink}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.loginText}>
+            Already have an account?{' '}
+            <Text style={styles.loginLinkText}>Log In</Text>
+          </Text>
+        </TouchableOpacity>
       </View>
     </PaperProvider>
   );
@@ -153,10 +197,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#FAF7FF', // Your primary background color
+    backgroundColor: '#FAF7FF',
   },
   title: {
-    color: '#483D8B', // Your primary text color
+    color: '#483D8B',
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -177,12 +221,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   errorText: {
-    color: '#DC3545', // Your danger/red color
+    color: '#DC3545',
     marginLeft: 5,
     marginTop: 5,
   },
   divider: {
-    marginVertical: 30,
+    marginVertical: 25,
   },
   googleButton: {
     borderColor: '#7868E6',
@@ -190,6 +234,18 @@ const styles = StyleSheet.create({
   googleButtonLabel: {
     color: '#7868E6',
   },
+  loginLink: {
+    marginTop: 25,
+  },
+  loginText: {
+    textAlign: 'center',
+    color: '#483D8B',
+    fontSize: 14,
+  },
+  loginLinkText: {
+    fontWeight: 'bold',
+    color: '#7868E6', // Secondary accent color
+  },
 });
 
-export default LoginScreen;
+export default SignupScreen;

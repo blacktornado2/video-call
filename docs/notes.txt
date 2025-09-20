@@ -64,3 +64,7 @@ togetherly-app/
 ├── index.js
 ├── tsconfig.json
 └── package.json
+
+- Let's implement Authentication today
+- Create a Login Screen
+- Create a Signup Screen

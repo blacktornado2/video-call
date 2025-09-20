@@ -25,7 +25,7 @@ Backend Component 2: The STUN Server
  - Can you run it on your server? You could (using software like COTURN), but you don't need to.
  - Cost: Free. There are many high-quality, public STUN servers you can use for free. Google provides several that are used by billions of devices every day. You simply point to them in your frontend code.
 
-Backend Component 3: The TURN Server (The Critical "Gotcha")
+Backend Component 3: The TURN Server
  - What it is: A Traversal Using Relays around NAT server. This is the crucial fallback. About 10-20% of the time, due to complex firewalls or "Symmetric NAT," two users cannot connect directly. A TURN server acts as a middleman or relay, receiving video from User A and forwarding it to User B, and vice-versa.
  - Can you run it on your server? Technically, yes... but you probably shouldn't.
  - Cost: This is where the cost comes from.
