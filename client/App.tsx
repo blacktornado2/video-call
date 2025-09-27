@@ -1,35 +1,28 @@
-import { createStaticNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useContext } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { ActivityIndicator, View } from 'react-native';
 
-import LoginScreen from './src/screens/LoginScreen';
-import HomeScreen from './src/screens/HomeScreen';
-import ProfileScreen from './src/screens/ProfileScreen';
-import SignUpScreen from './src/screens/SignUpScreen';
+import { AuthContext } from './src/contexts/AuthContext';
 
-const RootStack = createNativeStackNavigator({
-  screens: {
-    SignUp: {
-      screen: SignUpScreen,
-    },
-    Login: {
-      screen: LoginScreen,
-    },
-    Home: {
-      screen: HomeScreen,
-      options: { title: 'Welcome' },
-    },
-    Profile: {
-      screen: ProfileScreen,
-    },
-  },
-});
+import AuthStack from './src/navigation/AuthStack';
+import MainStack from './src/navigation/MainStack';
 
-const Navigation = createStaticNavigation(RootStack);
+const AppNavigator = () => {
+  const { user, isLoading } = useContext(AuthContext);
 
-function App() {
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
-      <Navigation />
+    <NavigationContainer>
+      {user ? <MainStack /> : <AuthStack />}
+    </NavigationContainer>
   );
-}
+};
 
-export default App;
+export default AppNavigator;

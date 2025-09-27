@@ -2,13 +2,10 @@ import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { FIREBASE_WEBCLIENT_ID } from '@env';
 
-// Configure Google Sign-In
 // This should be done once, typically in your app's entry point, but here is fine too.
 GoogleSignin.configure({
   webClientId: FIREBASE_WEBCLIENT_ID,
 });
-
-// --- Email & Password ---
 
 const signInWithEmail = async (email: string, password: string) => {
   try {
@@ -34,8 +31,6 @@ const signUpWithEmail = async (email: string, password: string) => {
   }
 };
 
-// --- Google OAuth ---
-
 const signInWithGoogle = async () => {
   try {
     // Check if your device supports Google Play
@@ -51,8 +46,6 @@ const signInWithGoogle = async () => {
     return { error };
   }
 };
-
-// --- Sign Out ---
 
 const signOut = async () => {
   try {

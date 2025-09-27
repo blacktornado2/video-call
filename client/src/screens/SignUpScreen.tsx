@@ -10,9 +10,9 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { authService } from '../services/authService'; // Import the service
 
-// 1. Define the validation schema with a password confirmation check
+import { authService } from '../services/authService';
+
 const signupSchema = z
   .object({
     email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -31,7 +31,6 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 // Note: You'll need to pass the `navigation` prop from your navigator
 const SignupScreen = ({ navigation }) => {
-  // 2. Initialize React Hook Form
   const {
     control,
     handleSubmit,
@@ -45,7 +44,6 @@ const SignupScreen = ({ navigation }) => {
     },
   });
 
-  // 3. Handle Email/Password signup
   const onEmailSignup = async (data: SignupFormValues) => {
     console.log('Attempting email signup with:', data);
     const { user, error } = await authService.signUpWithEmail(
@@ -62,7 +60,6 @@ const SignupScreen = ({ navigation }) => {
     }
   };
 
-  // 4. Handle Google Sign-In (same as login)
   const onGoogleLogin = async () => {
     console.log('Attempting Google sign-in...');
     const { user, error } = await authService.signInWithGoogle();

@@ -10,9 +10,9 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+
 import { authService } from '../services/authService';
 
-// 1. Define the validation schema with Zod
 const loginSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z
@@ -20,7 +20,6 @@ const loginSchema = z.object({
     .min(6, { message: 'Password must be at least 6 characters' }),
 });
 
-// Infer the TypeScript type from the schema
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const LoginScreen = () => {
