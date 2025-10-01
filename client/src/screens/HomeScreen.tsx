@@ -9,12 +9,12 @@ const HomeScreen = ({ navigation }) => {
 
   const handleCreateRoom = () => {
     const newRoomId = uuidv4();
-    navigation.navigate('CallScreen', { roomId: newRoomId });
+    navigation.navigate('Call', { roomId: newRoomId });
   };
 
   const handleJoinRoom = () => {
     if (roomId.trim()) {
-      navigation.navigate('CallScreen', { roomId });
+      navigation.navigate('Call', { roomId });
     }
   };
 
