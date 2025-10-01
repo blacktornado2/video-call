@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { ActivityIndicator, View } from 'react-native';
 
-import { AuthContext } from './src/contexts/AuthContext';
+import { AuthContext, AuthProvider } from './src/contexts/AuthContext';
 
 import AuthStack from './src/navigation/AuthStack';
 import MainStack from './src/navigation/MainStack';
@@ -25,4 +25,10 @@ const AppNavigator = () => {
   );
 };
 
-export default AppNavigator;
+const App = () => (
+  <AuthProvider>
+    <AppNavigator />
+  </AuthProvider>
+);
+
+export default App;

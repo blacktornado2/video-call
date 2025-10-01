@@ -9,7 +9,7 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  isLoading: true,
+  isLoading: false,
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {

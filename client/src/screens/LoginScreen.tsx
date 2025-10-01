@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, StyleSheet, Text, Alert, TouchableOpacity } from 'react-native';
 import {
   TextInput,
   Button,
@@ -22,7 +22,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   // 2. Initialize React Hook Form
   const {
     control,
@@ -122,7 +122,7 @@ const LoginScreen = () => {
         {/* Submit Button */}
         <Button
           mode="contained"
-          onPress={handleSubmit(onEmailLogin)}
+          onPress={() => handleSubmit(onEmailLogin)}
           style={styles.button}
           labelStyle={styles.buttonLabel}
           buttonColor="#B2A4FF" // Your primary accent color
@@ -142,6 +142,17 @@ const LoginScreen = () => {
         >
           Sign In with Google
         </Button>
+
+        {/* Link to Signup Screen */}
+        <TouchableOpacity
+          style={styles.signupLink}
+          onPress={() => navigation.navigate('Signup')}
+        >
+          <Text style={styles.signupText}>
+            Don't have an account?{' '}
+            <Text style={styles.signupLinkText}>Sign Up</Text>
+          </Text>
+        </TouchableOpacity>
       </View>
     </PaperProvider>
   );
@@ -188,6 +199,18 @@ const styles = StyleSheet.create({
   },
   googleButtonLabel: {
     color: '#7868E6',
+  },
+  signupLink: {
+    marginTop: 25,
+  },
+  signupText: {
+    textAlign: 'center',
+    color: '#483D8B',
+    fontSize: 14,
+  },
+  signupLinkText: {
+    fontWeight: 'bold',
+    color: '#7868E6', // Secondary accent color
   },
 });
 

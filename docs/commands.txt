@@ -1,3 +1,6 @@
  - npx @react-native-community/cli@latest init ./ : Initialise a RN project using RN CLI
  - npx prettier --write App.tsx : execute prettier on a particular file
  - keytool -list -v -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore : Generate SHA-1
+ - cd android && ./gradlew clean && cd .. && npx react-native run-android : Clean android build folder and then make android build
+ - npm cache clean --force : forcefully clean the cache
+ - npx react-native start --reset-cache
